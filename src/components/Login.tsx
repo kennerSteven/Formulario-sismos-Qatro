@@ -72,7 +72,7 @@ export function Login({ onLogin }: LoginProps) {
       <div className="bg-white max-w-md w-full rounded-3xl shadow-sm border border-surface-200 px-4 pb-3">
         <div className="flex flex-col items-center justify-center mb-8">
           <img src={qatroLogoUrl} alt="Qatro" className="w-52 h-52 object-contain relative z-10 -mr-4" />
-          <small className="font-bold text-surface-800 text-[11px] -mt-12 mb-4 relative z-20 tracking-widest uppercase">Consultoría Técnica</small>
+          <small className="font-bold text-surface-800 text-[11px] -mt-12 mb-4 relative z-20 tracking-widest uppercase -mr-4">Consultoría Técnica</small>
           <p className="text-surface-500 text-center text-sm px-2 mb-6">Guía Técnica para la Inspección de Edificaciones Después de un Sismo</p>
 
           <div className="flex flex-col items-center justify-center">

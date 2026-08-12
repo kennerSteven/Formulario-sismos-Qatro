@@ -143,11 +143,9 @@ function App() {
   });
 
   const handleClearForm = () => {
-    if (window.confirm('¿Estás seguro de que deseas limpiar todos los campos? Esta acción no se puede deshacer.')) {
-      setFormData(getInitialFormData());
-      setFormErrors({});
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    setFormData(getInitialFormData());
+    setFormErrors({});
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleFieldChange = (field: string, value: any) => {
@@ -382,8 +380,7 @@ function App() {
     localStorage.setItem('inspectorUser', JSON.stringify(newUser));
     setFormData(prev => ({
       ...prev,
-      commissionLeaderName: name,
-      commissionCode: doc
+      commissionLeaderName: name
     }));
   };
 
