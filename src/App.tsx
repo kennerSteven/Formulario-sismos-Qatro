@@ -83,6 +83,7 @@ const getInitialFormData = () => ({
   securityMeasures: [] as string[],
   restrictedAreas: '',
   photos: [] as string[],
+  location: null as { lat: number; lng: number } | null,
 
   qualityCondition: '',
   planConfigurationCondition: '',

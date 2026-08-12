@@ -61,7 +61,6 @@ export function FinalEvaluation({ data, onChange, errors = {} }: FinalEvaluation
     onChange('photos', newPhotos);
   };
 
-
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-surface-200 p-4 sm:p-6 mb-6">
       <h2 className="text-xl font-bold text-surface-900 mb-6">Evaluación Final y Recomendaciones</h2>

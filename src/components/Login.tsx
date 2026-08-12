@@ -5,6 +5,7 @@ import logoUrl from '../assets/contro.ico';
 import qatroLogoUrl from '../assets/Qatro.png';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
+import { PrivacyPolicyModal } from './PrivacyPolicyModal';
 
 interface LoginProps {
   onLogin: (name: string, doc: string) => void;
@@ -16,6 +17,8 @@ export function Login({ onLogin }: LoginProps) {
   const [document, setDocument] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [acceptPolicy, setAcceptPolicy] = useState(false);
+  const [isPolicyModalOpen, setIsPolicyModalOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,6 +35,12 @@ export function Login({ onLogin }: LoginProps) {
       if (mode === 'register') {
         if (!name.trim()) {
           setError('El nombre completo es requerido para registrarse.');
+          setIsLoading(false);
+          return;
+        }
+
+        if (!acceptPolicy) {
+          setError('Debes aceptar la Política de Tratamiento de Datos Personales para registrarte.');
           setIsLoading(false);
           return;
         }
@@ -120,6 +129,28 @@ export function Login({ onLogin }: LoginProps) {
             placeholder="Documento de identidad"
           />
 
+          {mode === 'register' && (
+            <div className="flex items-start gap-2 mt-2 px-1">
+              <input 
+                type="checkbox" 
+                id="acceptPolicy" 
+                className="mt-1 w-4 h-4 text-primary-600 rounded border-surface-300 focus:ring-primary-500"
+                checked={acceptPolicy}
+                onChange={(e) => setAcceptPolicy(e.target.checked)}
+              />
+              <label htmlFor="acceptPolicy" className="text-sm text-surface-600 leading-tight">
+                He leído y acepto la{' '}
+                <button 
+                  type="button" 
+                  onClick={() => setIsPolicyModalOpen(true)}
+                  className="text-primary-600 hover:text-primary-800 font-medium underline"
+                >
+                  Política de Tratamiento de Datos Personales
+                </button>
+              </label>
+            </div>
+          )}
+
           {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
           <BaseButton type="submit" fullWidth className="mt-4 py-3 text-lg flex justify-center" disabled={isLoading}>
@@ -127,6 +158,11 @@ export function Login({ onLogin }: LoginProps) {
           </BaseButton>
         </form>
       </div>
+
+      <PrivacyPolicyModal 
+        isOpen={isPolicyModalOpen} 
+        onClose={() => setIsPolicyModalOpen(false)} 
+      />
     </div>
   );
 }

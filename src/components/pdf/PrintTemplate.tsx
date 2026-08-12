@@ -2,6 +2,7 @@ import { forwardRef } from 'react';
 import { STRUCTURAL_SYSTEMS, FLOOR_TYPES, CONSTRUCTION_YEARS } from '../../data/dictionaries';
 import logoUrl from '../../assets/contro.ico';
 import qatroLogoUrl from '../../assets/Qatro.png';
+import { StaticMap } from '../ui/StaticMap';
 
 interface PrintTemplateProps {
   data: any;
@@ -243,17 +244,31 @@ export const PrintTemplate = forwardRef<HTMLDivElement, PrintTemplateProps>(({ d
         </div>
       </div>
 
-      {/* FOTOS */}
-      {(data.photos || []).length > 0 && (
+      {/* FOTOS Y UBICACIÓN */}
+      {(data.location || (data.photos || []).length > 0) && (
         <div className="border-2 border-black p-1 mt-4 text-black" style={{ pageBreakInside: 'avoid' }}>
-          <div className="text-[10px] font-bold mb-1 text-black bg-gray-200 p-1">ESQUEMA (EVIDENCIA FOTOGRÁFICA)</div>
-          <div className="grid grid-cols-2 gap-2 p-2">
-            {(data.photos || []).map((photo: string, index: number) => (
-              <div key={index} className="aspect-video border border-gray-300 bg-gray-50 flex items-center justify-center">
-                <img src={photo} className="max-w-full max-h-full object-contain" />
+          <div className="text-[10px] font-bold mb-1 text-black bg-gray-200 p-1">ESQUEMA (EVIDENCIA FOTOGRÁFICA Y UBICACIÓN)</div>
+          
+          {data.location && (
+            <div className="mb-2 p-1 border border-gray-300 bg-gray-50 flex flex-col items-center">
+              <div className="text-[9px] font-bold mb-1">
+                Ubicación GPS: Lat {data.location.lat.toFixed(5)}, Lng {data.location.lng.toFixed(5)}
               </div>
-            ))}
-          </div>
+              <div className="w-full max-w-[600px] h-[300px] border border-gray-300 overflow-hidden relative">
+                <StaticMap lat={data.location.lat} lng={data.location.lng} zoom={16} width="100%" height="100%" />
+              </div>
+            </div>
+          )}
+
+          {(data.photos || []).length > 0 && (
+            <div className="grid grid-cols-2 gap-2 p-1">
+              {(data.photos || []).map((photo: string, index: number) => (
+                <div key={index} className="aspect-video border border-gray-300 bg-gray-50 flex items-center justify-center">
+                  <img src={photo} className="max-w-full max-h-full object-contain" />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

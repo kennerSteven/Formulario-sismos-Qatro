@@ -1,5 +1,7 @@
-
+import React from 'react';
 import { BaseInput } from '../ui/BaseInput';
+import { MapPin } from 'lucide-react';
+import { StaticMap } from '../ui/StaticMap';
 
 interface FormHeaderProps {
   data: {
@@ -10,12 +12,45 @@ interface FormHeaderProps {
     cadastralManzana: string;
     cadastralPredio: string;
     cadastralConstruccion: string;
+    location?: { lat: number; lng: number } | null;
   };
-  onChange: (field: string, value: string) => void;
+  onChange: (field: string, value: any) => void;
   errors?: Record<string, string>;
 }
 
 export function FormHeader({ data, onChange, errors = {} }: FormHeaderProps) {
+  const [isLocating, setIsLocating] = React.useState(false);
+  const [locationError, setLocationError] = React.useState('');
+
+  const handleCaptureLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationError('Tu navegador no soporta geolocalización');
+      return;
+    }
+
+    setIsLocating(true);
+    setLocationError('');
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        onChange('location', {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        });
+        setIsLocating(false);
+      },
+      (error) => {
+        setIsLocating(false);
+        if (error.code === error.PERMISSION_DENIED) {
+          setLocationError('Permiso denegado. Por favor, permite el acceso a la ubicación.');
+        } else {
+          setLocationError('Error al obtener la ubicación. Intenta nuevamente.');
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+  };
+
   return (
     <section className="flex flex-col gap-6 bg-white p-6 rounded-2xl shadow-sm border border-surface-100">
       <h2 className="text-xl font-bold text-surface-900 border-b border-surface-100 pb-4 mb-2">Datos Generales</h2>
@@ -80,6 +115,32 @@ export function FormHeader({ data, onChange, errors = {} }: FormHeaderProps) {
             onChange={(e) => onChange('cadastralConstruccion', e.target.value)}
             error={errors.cadastralConstruccion}
           />
+        </div>
+
+        <div className="mt-6 border-t border-surface-200 pt-6">
+          <h4 className="text-sm font-semibold text-surface-600 uppercase tracking-wider mb-4">Ubicación (Geolocalización)</h4>
+          <button 
+            type="button" 
+            onClick={handleCaptureLocation} 
+            disabled={isLocating}
+            className="w-full flex items-center justify-center gap-2 bg-white border border-surface-300 rounded-xl py-4 font-medium hover:bg-surface-50 transition-colors disabled:opacity-50"
+          >
+            <MapPin className="w-5 h-5" /> 
+            {isLocating ? 'Obteniendo coordenadas...' : data.location ? 'Actualizar Ubicación' : 'Capturar Ubicación'}
+          </button>
+          
+          {locationError && <span className="text-sm text-red-600 mt-2 block">{locationError}</span>}
+          
+          {data.location && (
+            <div className="mt-4 bg-white p-3 rounded-xl border border-surface-200 shadow-sm flex flex-col items-center">
+              <p className="text-sm font-medium text-surface-700 mb-2">
+                Lat: {data.location.lat.toFixed(5)}, Lng: {data.location.lng.toFixed(5)}
+              </p>
+              <div className="w-full aspect-video rounded-lg overflow-hidden border border-surface-200 bg-surface-100 relative flex items-center justify-center">
+                <StaticMap lat={data.location.lat} lng={data.location.lng} zoom={16} />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>
