@@ -20,6 +20,7 @@ interface BuildingIdentificationProps {
     depthMeters: string;
   };
   onChange: (field: string, value: string) => void;
+  errors?: Record<string, string>;
 }
 
 const predominantUses = [
@@ -37,7 +38,7 @@ const predominantUses = [
   { value: 'otros', label: 'Otros' },
 ];
 
-export function BuildingIdentification({ data, onChange }: BuildingIdentificationProps) {
+export function BuildingIdentification({ data, onChange, errors = {} }: BuildingIdentificationProps) {
   const levelsAbove = Number(data.levelsAboveGround) || 0;
   const basements = Number(data.basements) || 0;
   const totalLevels = levelsAbove + basements;
@@ -69,35 +70,39 @@ export function BuildingIdentification({ data, onChange }: BuildingIdentificatio
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <BaseInput
             layout="horizontal"
-            label="Carrera"
+            label="Carrera (K)"
             type="text"
             value={data.addressCarrera}
             onChange={(e) => onChange('addressCarrera', e.target.value)}
             disabled={isFieldDisabled('addressCarrera')}
+            error={errors.addressCarrera}
           />
           <BaseInput
             layout="horizontal"
-            label="Calle"
+            label="Calle (C)"
             type="text"
             value={data.addressCalle}
             onChange={(e) => onChange('addressCalle', e.target.value)}
             disabled={isFieldDisabled('addressCalle')}
+            error={errors.addressCalle}
           />
           <BaseInput
             layout="horizontal"
-            label="Transv"
+            label="Transv (TV)"
             type="text"
             value={data.addressTransv}
             onChange={(e) => onChange('addressTransv', e.target.value)}
             disabled={isFieldDisabled('addressTransv')}
+            error={errors.addressTransv}
           />
           <BaseInput
             layout="horizontal"
-            label="Diag"
+            label="Diag (DG)"
             type="text"
             value={data.addressDiag}
             onChange={(e) => onChange('addressDiag', e.target.value)}
             disabled={isFieldDisabled('addressDiag')}
+            error={errors.addressDiag}
           />
         </div>
 
@@ -106,11 +111,12 @@ export function BuildingIdentification({ data, onChange }: BuildingIdentificatio
           <div className="col-span-1 md:col-span-4">
             <BaseInput
               layout="horizontal"
-              label="Avda"
+              label="Avda (AV)"
               type="text"
               value={data.addressAvda}
               onChange={(e) => onChange('addressAvda', e.target.value)}
               disabled={isFieldDisabled('addressAvda')}
+              error={errors.addressAvda}
             />
           </div>
           <div className="col-span-1 md:col-span-3">
@@ -121,16 +127,17 @@ export function BuildingIdentification({ data, onChange }: BuildingIdentificatio
               value={data.addressOtro}
               onChange={(e) => onChange('addressOtro', e.target.value)}
               disabled={isFieldDisabled('addressOtro')}
+              error={errors.addressOtro}
             />
           </div>
           <div className="col-span-2 md:col-span-5">
             <BaseInput
               layout="horizontal"
-              label="Número"
+              label="No."
               type="text"
               value={data.addressNumero}
               onChange={(e) => onChange('addressNumero', e.target.value)}
-              // Número nunca se deshabilita por esta lógica
+              error={errors.addressNumero}
             />
           </div>
         </div>
@@ -141,6 +148,7 @@ export function BuildingIdentification({ data, onChange }: BuildingIdentificatio
           value={data.buildingName}
           onChange={(e) => onChange('buildingName', e.target.value)}
           className="mt-2"
+          error={errors.buildingName}
         />
       </div>
 
@@ -151,6 +159,7 @@ export function BuildingIdentification({ data, onChange }: BuildingIdentificatio
           options={predominantUses}
           value={data.predominantUse}
           onChange={(e) => onChange('predominantUse', e.target.value)}
+          error={errors.predominantUse}
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <BaseInput
@@ -158,12 +167,14 @@ export function BuildingIdentification({ data, onChange }: BuildingIdentificatio
             type="text"
             value={data.buildingUse}
             onChange={(e) => onChange('buildingUse', e.target.value)}
+            error={errors.buildingUse}
           />
           <BaseInput
             label="De la Planta Baja"
             type="text"
             value={data.groundFloorUse}
             onChange={(e) => onChange('groundFloorUse', e.target.value)}
+            error={errors.groundFloorUse}
           />
         </div>
       </div>
@@ -177,6 +188,7 @@ export function BuildingIdentification({ data, onChange }: BuildingIdentificatio
             min="0"
             value={data.levelsAboveGround}
             onChange={(e) => onChange('levelsAboveGround', e.target.value)}
+            error={errors.levelsAboveGround}
           />
           <BaseInput
             label="Sótanos"
@@ -184,6 +196,7 @@ export function BuildingIdentification({ data, onChange }: BuildingIdentificatio
             min="0"
             value={data.basements}
             onChange={(e) => onChange('basements', e.target.value)}
+            error={errors.basements}
           />
           <BaseInput
             label="Total"
@@ -199,6 +212,7 @@ export function BuildingIdentification({ data, onChange }: BuildingIdentificatio
             step="0.01"
             value={data.frontMeters}
             onChange={(e) => onChange('frontMeters', e.target.value)}
+            error={errors.frontMeters}
           />
           <BaseInput
             label="Fondo (m)"

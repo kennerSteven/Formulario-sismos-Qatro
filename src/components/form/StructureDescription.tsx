@@ -8,9 +8,10 @@ interface StructureDescriptionProps {
     constructionYearId: string;
   };
   onChange: (field: string, value: string) => void;
+  errors?: Record<string, string>;
 }
 
-export function StructureDescription({ data, onChange }: StructureDescriptionProps) {
+export function StructureDescription({ data, onChange, errors = {} }: StructureDescriptionProps) {
   
   // Mapeo de diccionarios a formato de opciones para BaseSelect: "id - label"
   const structuralOptions = [
@@ -47,6 +48,7 @@ export function StructureDescription({ data, onChange }: StructureDescriptionPro
           options={structuralOptions}
           value={data.structuralSystemId}
           onChange={(e) => onChange('structuralSystemId', e.target.value)}
+          error={errors.structuralSystemId}
         />
         
         <BaseSelect
@@ -54,6 +56,7 @@ export function StructureDescription({ data, onChange }: StructureDescriptionPro
           options={floorOptions}
           value={data.floorTypeId}
           onChange={(e) => onChange('floorTypeId', e.target.value)}
+          error={errors.floorTypeId}
         />
         
         <BaseSelect
@@ -61,6 +64,7 @@ export function StructureDescription({ data, onChange }: StructureDescriptionPro
           options={yearOptions}
           value={data.constructionYearId}
           onChange={(e) => onChange('constructionYearId', e.target.value)}
+          error={errors.constructionYearId}
         />
       </div>
     </section>
