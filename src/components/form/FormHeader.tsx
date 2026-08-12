@@ -26,7 +26,8 @@ export function FormHeader({ data, onChange, errors = {} }: FormHeaderProps) {
         placeholder="Ej. F-001"
         value={data.formNumber}
         onChange={(e) => onChange('formNumber', e.target.value)}
-        className="font-bold"
+        className="font-bold pointer-events-none opacity-80"
+        readOnly
         error={errors.formNumber}
       />
       
@@ -48,7 +49,8 @@ export function FormHeader({ data, onChange, errors = {} }: FormHeaderProps) {
       </div>
 
       <div className="mt-4 p-5 bg-surface-50 rounded-xl border border-surface-200">
-        <h3 className="text-sm font-semibold text-surface-600 uppercase tracking-wider mb-4">Identificación Catastral</h3>
+        <h3 className="text-sm font-semibold text-surface-600 uppercase tracking-wider mb-2">Identificación Catastral</h3>
+        <p className="text-xs text-surface-500 mb-4">Nota: Si no conoce algún dato, escriba "N/A".</p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <BaseInput
             label="Barrio"

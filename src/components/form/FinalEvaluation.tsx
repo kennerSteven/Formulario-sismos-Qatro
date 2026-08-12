@@ -105,17 +105,19 @@ export function FinalEvaluation({ data, onChange, errors = {} }: FinalEvaluation
         <div className="mb-4">
           <label className="block text-sm font-medium text-surface-900 mb-2">Especifique lugares de la edificación:</label>
           <textarea
-            className={`w-full rounded-xl border ${errors.restrictedAreas ? 'border-red-500' : 'border-surface-300'} px-4 py-3 min-h-[80px]`}
+            className={`w-full rounded-xl border ${errors.restrictedAreas ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500/20' : 'border-surface-300'} px-4 py-3 min-h-[80px] transition-all`}
             value={data.restrictedAreas || ''}
             onChange={(e) => onChange('restrictedAreas', e.target.value)}
           />
+          {errors.restrictedAreas && <span className="text-sm text-red-500 mt-1 block">{errors.restrictedAreas}</span>}
         </div>
       </div>
 
-      <div className="mb-8 bg-surface-50 p-4 rounded-xl border border-surface-200">
-        <h3 className="text-lg font-semibold text-surface-800 mb-4 pb-2 border-b border-surface-100">Evidencia Fotográfica</h3>
+      <div className={`mb-8 p-4 rounded-xl border ${errors.photos ? 'border-red-500 bg-red-50' : 'bg-surface-50 border-surface-200'}`}>
+        <h3 className={`text-lg font-semibold mb-4 pb-2 border-b ${errors.photos ? 'text-red-800 border-red-200' : 'text-surface-800 border-surface-100'}`}>Evidencia Fotográfica</h3>
+        {errors.photos && <span className="text-sm text-red-600 mb-4 block">Requerido (mínimo 1 fotografía)</span>}
         <input type="file" accept="image/*" capture="environment" multiple className="hidden" ref={fileInputRef} onChange={handleFileChange} />
-        <button type="button" onClick={() => fileInputRef.current?.click()} disabled={(data.photos || []).length >= 4} className="w-full flex items-center justify-center gap-2 bg-white border border-surface-300 rounded-xl py-4 font-medium">
+        <button type="button" onClick={() => fileInputRef.current?.click()} disabled={(data.photos || []).length >= 4} className="w-full flex items-center justify-center gap-2 bg-white border border-surface-300 rounded-xl py-4 font-medium hover:bg-surface-50 transition-colors">
           <Camera className="w-5 h-5" /> Capturar Fotografía
         </button>
         {(data.photos || []).length > 0 && (
@@ -182,12 +184,16 @@ export function FinalEvaluation({ data, onChange, errors = {} }: FinalEvaluation
         </div>
         <div className="mb-6 mt-4">
           <label className="block text-sm font-medium text-surface-900 mb-2">Comentarios:</label>
-          <textarea className="w-full rounded-xl border border-surface-300 px-4 py-3 min-h-[100px]" value={data.comments || ''} onChange={(e) => onChange('comments', e.target.value)} />
+          <textarea className={`w-full rounded-xl border ${errors.comments ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500/20' : 'border-surface-300'} px-4 py-3 min-h-[100px] transition-all`} value={data.comments || ''} onChange={(e) => onChange('comments', e.target.value)} />
+          {errors.comments && <span className="text-sm text-red-500 mt-1 block">{errors.comments}</span>}
         </div>
         <div className="border-t border-surface-200 pt-6 mt-6">
           <h4 className="text-sm font-bold text-surface-900 mb-4">INSPECTORES</h4>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-            <BaseInput label="Código de la comisión:" type="text" value={data.commissionCode} onChange={(e) => onChange('commissionCode', e.target.value)} error={errors.commissionCode} />
+            <div>
+              <BaseInput label="Código de la comisión:" type="text" value={data.commissionCode} onChange={(e) => onChange('commissionCode', e.target.value)} error={errors.commissionCode} />
+              <p className="text-xs text-surface-500 mt-1">Nota: Si no lo conoce, escriba "NA".</p>
+            </div>
             <BaseInput label="Nombre del líder:" type="text" value={data.commissionLeaderName} onChange={(e) => onChange('commissionLeaderName', e.target.value)} error={errors.commissionLeaderName} />
             <BaseInput label="No de Evaluadores:" type="number" min="1" onKeyDown={(e) => (e.key === '-' || e.key === 'e') && e.preventDefault()} value={data.evaluatorsCount} onChange={(e) => onChange('evaluatorsCount', e.target.value)} error={errors.evaluatorsCount} />
           </div>

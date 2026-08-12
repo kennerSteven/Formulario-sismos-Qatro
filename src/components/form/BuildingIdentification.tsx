@@ -221,6 +221,7 @@ export function BuildingIdentification({ data, onChange, errors = {} }: Building
             step="0.01"
             value={data.depthMeters}
             onChange={(e) => onChange('depthMeters', e.target.value)}
+            error={errors.depthMeters}
           />
         </div>
       </div>

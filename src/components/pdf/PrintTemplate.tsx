@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 import { STRUCTURAL_SYSTEMS, FLOOR_TYPES, CONSTRUCTION_YEARS } from '../../data/dictionaries';
 import logoUrl from '../../assets/contro.ico';
+import qatroLogoUrl from '../../assets/Qatro.png';
 
 interface PrintTemplateProps {
   data: any;
@@ -27,11 +28,19 @@ export const PrintTemplate = forwardRef<HTMLDivElement, PrintTemplateProps>(({ d
       {/* HEADER */}
       <div className="flex border-2 border-black mb-2">
         <div className="w-1/4 p-1 flex flex-col items-center justify-center border-r-2 border-black">
-          <img src={logoUrl} alt="Logo" className="w-12 h-12 object-contain mb-1" />
-          <div className="font-bold text-center text-xs leading-tight text-black">
-            Controller R.M.A
+          <img src={qatroLogoUrl} alt="Qatro Logo" className="w-40 h-24 object-contain -mb-2" />
+          
+          <div className="flex flex-col items-center justify-center w-full mt-0.5">
+            <span className="text-[6px] text-gray-500 uppercase font-bold leading-none mb-0.5">Desarrollado por:</span>
+            <div className="flex items-center gap-1">
+              <img src={logoUrl} alt="Logo" className="w-3 h-3 object-contain" />
+              <div className="font-bold text-center text-[8px] leading-tight text-black">
+                Controller R.M.A
+              </div>
+            </div>
           </div>
-          <div className="text-[8px] font-bold mt-1 text-black bg-gray-200 px-2 py-0.5 rounded uppercase">
+
+          <div className="text-[7.5px] font-bold mt-1.5 text-black bg-gray-200 px-1 py-0.5 rounded uppercase w-full text-center truncate">
             INSP: {data.commissionLeaderName || 'SIN ASIGNAR'}
           </div>
         </div>

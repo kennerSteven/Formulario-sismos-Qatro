@@ -38,7 +38,7 @@ export function BuildingState({ data, onChange, errors = {} }: BuildingStateProp
     data.glassDamage
   ]);
 
-  const YesNoUnknown = ({ label, field, value }: { label: string, field: string, value: string }) => (
+  const renderYesNoUnknown = (label: string, field: string, value: string) => (
     <div className="mb-4">
       <label className="block text-sm font-medium text-surface-900 mb-2">{label}</label>
       <div className="grid grid-cols-3 gap-2">
@@ -56,7 +56,7 @@ export function BuildingState({ data, onChange, errors = {} }: BuildingStateProp
     </div>
   );
 
-  const SeverityScale = ({ label, field, value }: { label: string, field: string, value: string }) => (
+  const renderSeverityScale = (label: string, field: string, value: string) => (
     <div className="mb-4">
       <label className="block text-sm font-medium text-surface-900 mb-2">{label}</label>
       <div className="grid grid-cols-5 gap-1">
@@ -86,15 +86,16 @@ export function BuildingState({ data, onChange, errors = {} }: BuildingStateProp
   );
 
   const handleStructuralChange = (element: string, level: string, val: string) => {
+    const numericVal = val.replace(/[^0-9]/g, '');
     const current = data[element] || {};
-    onChange(element, { ...current, [level]: val });
+    onChange(element, { ...current, [level]: numericVal });
   };
 
-  const StructuralCard = ({ title, field }: { title: string, field: string }) => {
+  const renderStructuralCard = (title: string, field: string) => {
     const values = data[field] || { none: '', slight: '', moderate: '', severe: '', verySevere: '' };
     return (
-      <div className="border border-surface-200 p-3 sm:p-4 rounded-xl mb-4 bg-white shadow-sm">
-        <h4 className="font-semibold text-surface-900 mb-3">{title}</h4>
+      <div className={`border p-3 sm:p-4 rounded-xl mb-4 bg-white shadow-sm ${errors?.[field] ? 'border-red-500 bg-red-50' : 'border-surface-200'}`}>
+        <h4 className={`font-semibold mb-3 ${errors?.[field] ? 'text-red-800' : 'text-surface-900'}`}>{title}</h4>
         <div className="grid grid-cols-5 gap-2 sm:gap-3 text-center text-[10px] sm:text-xs font-medium text-surface-600 mb-2">
           <div>1. Ninguno</div>
           <div>2. Leve</div>
@@ -103,12 +104,13 @@ export function BuildingState({ data, onChange, errors = {} }: BuildingStateProp
           <div>5. Severo</div>
         </div>
         <div className="grid grid-cols-5 gap-2 sm:gap-3">
-          <BaseInput type="number" min="0" onKeyDown={(e) => (e.key === '-' || e.key === 'e') && e.preventDefault()} value={values.none} onChange={(e) => handleStructuralChange(field, 'none', e.target.value)} placeholder="%" className="text-center px-0 sm:px-1 py-3 text-sm" error={errors?.[field] ? ' ' : undefined} />
-          <BaseInput type="number" min="0" onKeyDown={(e) => (e.key === '-' || e.key === 'e') && e.preventDefault()} value={values.slight} onChange={(e) => handleStructuralChange(field, 'slight', e.target.value)} placeholder="%" className="text-center px-0 sm:px-1 py-3 text-sm" error={errors?.[field] ? ' ' : undefined} />
-          <BaseInput type="number" min="0" onKeyDown={(e) => (e.key === '-' || e.key === 'e') && e.preventDefault()} value={values.moderate} onChange={(e) => handleStructuralChange(field, 'moderate', e.target.value)} placeholder="%" className="text-center px-0 sm:px-1 py-3 text-sm" error={errors?.[field] ? ' ' : undefined} />
-          <BaseInput type="number" min="0" onKeyDown={(e) => (e.key === '-' || e.key === 'e') && e.preventDefault()} value={values.severe} onChange={(e) => handleStructuralChange(field, 'severe', e.target.value)} placeholder="%" className="text-center px-0 sm:px-1 py-3 text-sm" error={errors?.[field] ? ' ' : undefined} />
-          <BaseInput type="number" min="0" onKeyDown={(e) => (e.key === '-' || e.key === 'e') && e.preventDefault()} value={values.verySevere} onChange={(e) => handleStructuralChange(field, 'verySevere', e.target.value)} placeholder="%" className="text-center px-0 sm:px-1 py-3 text-sm" error={errors?.[field] ? ' ' : undefined} />
+          <BaseInput type="text" inputMode="numeric" pattern="[0-9]*" maxLength={3} value={values.none} onChange={(e) => handleStructuralChange(field, 'none', e.target.value)} placeholder="%" className="text-center px-0 sm:px-1 py-3 text-sm" />
+          <BaseInput type="text" inputMode="numeric" pattern="[0-9]*" maxLength={3} value={values.slight} onChange={(e) => handleStructuralChange(field, 'slight', e.target.value)} placeholder="%" className="text-center px-0 sm:px-1 py-3 text-sm" />
+          <BaseInput type="text" inputMode="numeric" pattern="[0-9]*" maxLength={3} value={values.moderate} onChange={(e) => handleStructuralChange(field, 'moderate', e.target.value)} placeholder="%" className="text-center px-0 sm:px-1 py-3 text-sm" />
+          <BaseInput type="text" inputMode="numeric" pattern="[0-9]*" maxLength={3} value={values.severe} onChange={(e) => handleStructuralChange(field, 'severe', e.target.value)} placeholder="%" className="text-center px-0 sm:px-1 py-3 text-sm" />
+          <BaseInput type="text" inputMode="numeric" pattern="[0-9]*" maxLength={3} value={values.verySevere} onChange={(e) => handleStructuralChange(field, 'verySevere', e.target.value)} placeholder="%" className="text-center px-0 sm:px-1 py-3 text-sm" />
         </div>
+        {errors?.[field] && <span className="text-sm text-red-600 mt-2 block">{errors[field]}</span>}
       </div>
     );
   };
@@ -129,19 +131,19 @@ export function BuildingState({ data, onChange, errors = {} }: BuildingStateProp
       {/* Geotécnicos 1-3 */}
       <div className="mb-8">
         <h3 className="text-lg font-semibold text-surface-800 mb-4 pb-2 border-b border-surface-100">Estado General y Problemas Geotécnicos</h3>
-        <YesNoUnknown label="1. ¿Colapso o daño severo?" field="collapseState" value={data.collapseState} />
-        <YesNoUnknown label="2. ¿Desviación de la vertical o asentamiento?" field="deviationState" value={data.deviationState} />
-        <YesNoUnknown label="3. ¿Falla visible de la cimentación?" field="foundationFailureState" value={data.foundationFailureState} />
+        {renderYesNoUnknown("1. ¿Colapso o daño severo?", "collapseState", data.collapseState)}
+        {renderYesNoUnknown("2. ¿Desviación de la vertical o asentamiento?", "deviationState", data.deviationState)}
+        {renderYesNoUnknown("3. ¿Falla visible de la cimentación?", "foundationFailureState", data.foundationFailureState)}
       </div>
 
       {/* Arquitectónicos 4-10 */}
       <div className="mb-8">
         <h3 className="text-lg font-semibold text-surface-800 mb-4 pb-2 border-b border-surface-100">Daños en Elementos Arquitectónicos</h3>
-        <SeverityScale label="4. Muros de fachadas" field="facadeDamage" value={data.facadeDamage} />
-        <SeverityScale label="5. Escaleras" field="stairsDamage" value={data.stairsDamage} />
-        <SeverityScale label="6. Cubiertas" field="roofDamage" value={data.roofDamage} />
-        <SeverityScale label="7. Pisos" field="flooringDamage" value={data.flooringDamage} />
-        <SeverityScale label="8. Muros divisorios" field="interiorWallsDamage" value={data.interiorWallsDamage} />
+        {renderSeverityScale("4. Muros de fachadas", "facadeDamage", data.facadeDamage)}
+        {renderSeverityScale("5. Escaleras", "stairsDamage", data.stairsDamage)}
+        {renderSeverityScale("6. Cubiertas", "roofDamage", data.roofDamage)}
+        {renderSeverityScale("7. Pisos", "flooringDamage", data.flooringDamage)}
+        {renderSeverityScale("8. Muros divisorios", "interiorWallsDamage", data.interiorWallsDamage)}
         
         <div className="mb-4 bg-surface-50 p-4 rounded-xl border border-surface-200">
           <label className="block text-sm font-medium text-surface-900 mb-3">9. Instalaciones</label>
@@ -158,17 +160,17 @@ export function BuildingState({ data, onChange, errors = {} }: BuildingStateProp
               />
             ))}
           </div>
-          <SeverityScale label="Severidad de Instalaciones" field="installationsDamage" value={data.installationsDamage} />
+          {renderSeverityScale("Severidad de Instalaciones", "installationsDamage", data.installationsDamage)}
         </div>
 
-        <SeverityScale label="10. Vidrios" field="glassDamage" value={data.glassDamage} />
+        {renderSeverityScale("10. Vidrios", "glassDamage", data.glassDamage)}
       </div>
 
       {/* Geotécnicos 11-12 */}
       <div className="mb-8">
         <h3 className="text-lg font-semibold text-surface-800 mb-4 pb-2 border-b border-surface-100">Más Problemas Geotécnicos</h3>
-        <YesNoUnknown label="11. ¿Falla en talud?" field="slopeFailureState" value={data.slopeFailureState} />
-        <YesNoUnknown label="12. ¿Asentamiento en el terreno?" field="settlementState" value={data.settlementState} />
+        {renderYesNoUnknown("11. ¿Falla en talud?", "slopeFailureState", data.slopeFailureState)}
+        {renderYesNoUnknown("12. ¿Asentamiento en el terreno?", "settlementState", data.settlementState)}
       </div>
 
       {/* Estructurales 13-16 */}
@@ -186,10 +188,10 @@ export function BuildingState({ data, onChange, errors = {} }: BuildingStateProp
           />
         </div>
 
-        <StructuralCard title="13. Columnas o muros de carga" field="columnsDamage" />
-        <StructuralCard title="14. Vigas" field="beamsDamage" />
-        <StructuralCard title="15. Nudos" field="nodesDamage" />
-        <StructuralCard title="16. Entrepisos" field="floorsDamage" />
+        {renderStructuralCard("13. Columnas o muros de carga", "columnsDamage")}
+        {renderStructuralCard("14. Vigas", "beamsDamage")}
+        {renderStructuralCard("15. Nudos", "nodesDamage")}
+        {renderStructuralCard("16. Entrepisos", "floorsDamage")}
       </div>
 
       {/* Clasificación Final */}
